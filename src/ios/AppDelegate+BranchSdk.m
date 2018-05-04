@@ -50,4 +50,21 @@
   }
 }
 
+// Respond to URI scheme links
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    // pass the url to the handle deep link call
+    [[Branch getInstance]
+     application:application
+     openURL:url
+     sourceApplication:sourceApplication
+     annotation:annotation];
+
+    //TODO: may do other deep link routing for the Facebook SDK, Pinterest SDK, etc
+
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
+    // send unhandled URL to notification
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"BSDKPostUnhandledURL" object:[url absoluteString]]];
+    return YES;
+}
+
 @end
